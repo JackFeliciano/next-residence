@@ -1,8 +1,12 @@
-# Next Residence
+# NEXT Residence
 
-A residence network for families who live in more than one country. Four houses
-on four coasts, one traveller, and a rule that keeps the gap between two stays
-short.
+NEXT Residence connects wealthy international families through a selective home exchange. Members book monthly stays in residences owned by other members across fifteen countries and can spend up to 182 days per calendar year across the network.
+
+Each house has a name, city, country and availability window defined by month. Each booking identifies a house, member and month. The system accepts or rejects each booking and reports the first condition that fails.
+
+A support desk covers tax residency, tax consulting, banking, financial services, insurance, health plans, home schooling, residence ships and investment property management.
+
+NEXT Residence uses plain PHP 8.2, without dependencies or a database server.
 
 ## The three pieces
 

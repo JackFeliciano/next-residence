@@ -40,21 +40,40 @@ final class Views
 
     public function home(): string
     {
-        $body = '<h1>The network</h1>' . "\n";
-        $body .= '<p class="lead">Four houses on four coasts. A family moves between them as the year moves, and the network keeps the gap between two stays short.</p>' . "\n";
+        $body = '<h1>' . $this->h('NEXT Residence Network') . '</h1>' . "\n";
+        $body .= '<p class="led">' . $this->h('NEXT Residence gives wealthy international families access to privately owned homes across fifteen countries through a selective home exchange. Members book stays month by month in other members\' residences and spend up to 182 days per calendar year across the network. A dedicated support desk helps members coordinate the financial, legal, educational and practical demands of international living.') . '</p>' . "\n";
+        $body .= '<h2>' . $this->h('The Fifteen Countries') . '</h2>' . "\n";
+        $body .= '<p>' . $this->h('The network connects member-owned residences across Georgia, Panama, Malta, England, Italy, Spain, Austria, Czechia, Hungary, Romania, Slovenia, Croatia, Serbia, Greece and Bulgaria.') . '</p>' . "\n";
+        $body .= '<h2>Houses in the Network</h2>' . "\n";
         $body .= '<table><thead><tr><th>House</th><th>City</th><th>Beds</th><th>Open months</th></tr></thead><tbody>' . "\n";
         foreach (Sample::houses() as $house) {
             $body .= $this->houseRow($house);
         }
         $body .= '</tbody></table>' . "\n";
-        $body .= '<h2>Three bookings against one window</h2>' . "\n";
-        $body .= '<p class="lead">The window runs from 2026-11-01 to 2026-12-01. One booking fits. The other two are refused, and each refusal names the condition that failed.</p>' . "\n";
+        $body .= '<h2>Support Desk</h2>' . "\n" . '<ul class="services">' . "\n";
+        foreach ([
+            ['Tax residency', 'Guidance on tax residency across countries and the consequences of international mobility.'],
+            ['Tax consulting', 'Tax consulting for members with homes and interests across multiple jurisdictions.'],
+            ['Banking and financial services', 'Access to banking and financial services for an international lifestyle.'],
+            ['Insurance plans', 'Insurance plans that support members and their international lives.'],
+            ['Health plans', 'Health plans for members and their families across countries.'],
+            ['Home schooling', 'Schooling support for children who study at home.'],
+            ['Residence ships', 'Residence ship options for members who extend their lives beyond land-based homes.'],
+            ['Property investment management', 'Management of members\' own properties as investments.'],
+        ] as [$serviceName, $serviceLine]) {
+            $body .= '<li><strong>' . $this->h($serviceName) . '</strong> ' . $this->h($serviceLine) . '</li>' . "\n";
+        }
+        $body .= '</ul>' . "\n";
+        $body .= '<h2>' . $this->h('The 182 Day Rule') . '</h2>' . "\n";
+        $body .= '<p>' . $this->h('Members can spend up to 182 days per calendar year across the residence network. The system counts booked days separately for each country and tracks the calendar year. It warns members before they cross a limit, helping them understand the tax residency consequences of their travel.') . '</p>' . "\n";
+        $body .= '<h2>The Window and Three Bookings</h2>' . "\n";
+        $body .= '<p>The window runs from 2026-11-01 to 2026-12-01. One booking fits. The other two are refused, and each refusal names the condition that failed.</p>' . "\n";
         $body .= '<table><thead><tr><th>Stay</th><th>House</th><th>Nights</th><th>Answer</th></tr></thead><tbody>' . "\n";
         foreach (Sample::bookings() as $booking) {
             $body .= $this->bookingRow($booking);
         }
 
-        return $this->page('The network', $body . '</tbody></table>' . "\n");
+        return $this->page('NEXT Residence Network', $body . '</tbody></table>' . "\n");
     }
 
     private function houseRow(House $house): string
