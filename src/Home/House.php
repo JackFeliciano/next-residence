@@ -6,8 +6,9 @@ namespace NextResidence\Home;
 
 /**
  * A house a member has put in the network. It carries the country it stands in,
- * the city, how many people sleep there and the months it opens. The photograph
- * is a file name only. Nothing here says who owns it.
+ * the city, how many people sleep there and the photograph file name. A stay
+ * runs a full year, so every house opens all twelve months. Nothing here says
+ * who owns it.
  */
 final class House
 {
@@ -34,16 +35,14 @@ final class House
                 throw new \InvalidArgumentException('a month runs from one to twelve');
             }
         }
-    }
-
-    public function opensOn(string $day): bool
-    {
-        return in_array((int) substr($day, 5, 2), $this->openMonths, true);
+        if (count(array_unique($openMonths)) < 12) {
+            throw new \InvalidArgumentException('a stay runs a full year, so a house opens all twelve months');
+        }
     }
 
     public function fits(Stay $stay): bool
     {
-        return $stay->house === $this->handle && $stay->people <= $this->beds && $this->opensOn($stay->from);
+        return $stay->house === $this->handle && $stay->people <= $this->beds;
     }
 
     /** @return array<string, mixed> */

@@ -7,8 +7,8 @@ namespace NextResidence\Home;
 /**
  * Houses and stays, invented. Every house stands in one of the fifteen
  * countries the network covers, and no house stands in a country outside that
- * list. The page runs four bookings against them so a member sees some
- * admitted and some refused with the condition that refused them.
+ * list. The page runs five bookings against them so a member sees two admitted
+ * and three refused, and each refusal names the condition that produced it.
  */
 final class Sample
 {
@@ -23,21 +23,21 @@ final class Sample
     public static function houses(): array
     {
         return [
-            new House('tbilisi-mtkvari', 'Tbilisi', 'Georgia', 6, [3, 4, 5, 6, 9, 10], 'house-1.jpg'),
-            new House('panama-casco', 'Panama City', 'Panama', 4, [1, 2, 3, 11, 12], 'house-2.jpg'),
-            new House('valletta-bastion', 'Valletta', 'Malta', 5, [4, 5, 6, 7, 8, 9], 'house-3.jpg'),
-            new House('london-courtyard', 'London', 'England', 6, [1, 2, 6, 7, 8, 12], 'house-4.jpg'),
-            new House('como-lake', 'Como', 'Italy', 8, [5, 6, 7, 8, 9], 'house-5.jpg'),
-            new House('barcelona-gothic', 'Barcelona', 'Spain', 4, [3, 4, 5, 9, 10, 11], 'house-6.jpg'),
-            new House('vienna-ring', 'Vienna', 'Austria', 5, [1, 2, 3, 11, 12], 'house-7.jpg'),
-            new House('prague-old-town', 'Prague', 'Czechia', 6, [4, 5, 6, 9, 10], 'house-8.jpg'),
-            new House('budapest-buda', 'Budapest', 'Hungary', 4, [3, 4, 5, 10, 11], 'house-9.jpg'),
-            new House('bucharest-herastrau', 'Bucharest', 'Romania', 5, [5, 6, 7, 8, 9], 'house-10.jpg'),
-            new House('ljubljana-river', 'Ljubljana', 'Slovenia', 4, [6, 7, 8, 9], 'house-11.jpg'),
-            new House('split-diocletian', 'Split', 'Croatia', 6, [5, 6, 7, 8, 9, 10], 'house-12.jpg'),
-            new House('belgrade-danube', 'Belgrade', 'Serbia', 4, [4, 5, 6, 9, 10], 'house-13.jpg'),
-            new House('athens-plaka', 'Athens', 'Greece', 6, [3, 4, 5, 6, 9, 10, 11], 'house-14.jpg'),
-            new House('sofia-vitosha', 'Sofia', 'Bulgaria', 5, [6, 7, 8, 9, 12], 'house-15.jpg'),
+            new House('tbilisi-mtkvari', 'Tbilisi', 'Georgia', 6, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 'house-1.jpg'),
+            new House('panama-casco', 'Panama City', 'Panama', 4, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 'house-2.jpg'),
+            new House('valletta-bastion', 'Valletta', 'Malta', 5, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 'house-3.jpg'),
+            new House('london-courtyard', 'London', 'England', 6, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 'house-4.jpg'),
+            new House('como-lake', 'Como', 'Italy', 8, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 'house-5.jpg'),
+            new House('barcelona-gothic', 'Barcelona', 'Spain', 4, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 'house-6.jpg'),
+            new House('vienna-ring', 'Vienna', 'Austria', 5, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 'house-7.jpg'),
+            new House('prague-old-town', 'Prague', 'Czechia', 6, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 'house-8.jpg'),
+            new House('budapest-buda', 'Budapest', 'Hungary', 4, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 'house-9.jpg'),
+            new House('bucharest-herastrau', 'Bucharest', 'Romania', 5, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 'house-10.jpg'),
+            new House('ljubljana-river', 'Ljubljana', 'Slovenia', 4, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 'house-11.jpg'),
+            new House('split-diocletian', 'Split', 'Croatia', 6, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 'house-12.jpg'),
+            new House('belgrade-danube', 'Belgrade', 'Serbia', 4, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 'house-13.jpg'),
+            new House('athens-plaka', 'Athens', 'Greece', 6, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 'house-14.jpg'),
+            new House('sofia-vitosha', 'Sofia', 'Bulgaria', 5, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 'house-15.jpg'),
         ];
     }
 
@@ -75,16 +75,17 @@ final class Sample
         $year = new Window(2027);
 
         return [
-            new Booking(new Stay('tbilisi-mtkvari', '2027-03-04', '2027-03-20', 5), self::house('tbilisi-mtkvari'), $year),
-            new Booking(new Stay('sofia-vitosha', '2027-07-02', '2027-07-12', 4), self::house('sofia-vitosha'), $year),
-            new Booking(new Stay('prague-old-town', '2027-02-08', '2027-02-18', 4), self::house('prague-old-town'), $year),
-            new Booking(new Stay('athens-plaka', '2027-09-01', '2027-09-15', 6), self::house('athens-plaka'), $year),
+            new Booking(new Stay('tbilisi-mtkvari', '2027-09-12', '2028-09-10', 5), self::house('tbilisi-mtkvari'), $year),
+            new Booking(new Stay('vienna-ring', '2027-10-04', '2028-10-02', 4), self::house('vienna-ring'), $year),
+            new Booking(new Stay('athens-plaka', '2027-09-12', '2028-09-09', 6), self::house('athens-plaka'), $year),
+            new Booking(new Stay('panama-casco', '2027-10-04', '2028-10-02', 9), self::house('panama-casco'), $year),
+            new Booking(new Stay('sofia-vitosha', '2027-10-01', '2028-09-28', 4), self::house('sofia-vitosha'), $year),
         ];
     }
 
-    /** A smart stay that runs from October into the next calendar year. */
+    /** The smart stay the page shows in full: 364 days, two years, one country. */
     public static function smartStay(): Stay
     {
-        return new Stay('panama-casco', '2027-11-20', '2028-01-10', 4);
+        return new Stay('tbilisi-mtkvari', '2027-11-20', '2028-11-18', 4);
     }
 }

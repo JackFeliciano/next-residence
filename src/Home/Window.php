@@ -5,24 +5,23 @@ declare(strict_types=1);
 namespace NextResidence\Home;
 
 /**
- * The rule the network runs on. A member may spend 182 days per calendar year
- * in each country, because a tax authority reads the days per country and not
- * the total. Two countries fill the ordinary year of 364 days. It refuses a stay
- * that overruns the year or pushes one country past its limit.
+ * The rule the network runs on. A member books one stay of 364 days in one
+ * country: it begins in the last 182 days of one calendar year and ends in the
+ * first 182 days of the next. That keeps the member under the 183 days a tax
+ * authority counts in any twelve months, so the member never becomes tax
+ * resident in the country that holds the house. A shorter stay leaves days
+ * unused in both years, and the network refuses it.
  */
 final class Window
 {
-    public const DAYS_PER_YEAR = 182;
+    public const DAYS_PER_STAY = 364;
+    public const DAYS_PER_HALF = 182;
 
     public function __construct(
         public readonly int $year,
-        public readonly int $limit = self::DAYS_PER_YEAR,
     ) {
         if ($year < 2000 || $year > 2100) {
             throw new \InvalidArgumentException('a window names one calendar year');
-        }
-        if ($limit < 1 || $limit > 366) {
-            throw new \InvalidArgumentException('a limit runs from one day to a full year');
         }
     }
 
@@ -33,20 +32,42 @@ final class Window
 
     public function end(): string
     {
-        return sprintf('%04d-01-01', $this->year + 1);
+        return sprintf('%04d-01-01', $this->year + 2);
     }
 
+    /** The first day a stay may book: the 183rd day of the year. */
+    public function opensOn(): string
+    {
+        return sprintf('%04d-07-03', $this->year);
+    }
+
+    /** The last day a stay may book: the 182nd day of the following year. */
+    public function closesOn(): string
+    {
+        return sprintf('%04d-07-02', $this->year + 1);
+    }
+
+    /** How many days of the stay fall in each of the two calendar years. */
     public function admits(Stay $stay, int $alreadyInCountry = 0): bool
     {
-        if ($stay->from < $this->start() || $stay->to > $this->end()) {
-            return false;
-        }
-
-        return $alreadyInCountry + $stay->nightsInYear($this->year) <= $this->limit;
+        return $this->refusal($stay, $alreadyInCountry) === '';
     }
 
-    public function left(Stay $stay, int $alreadyInCountry = 0): int
+    public function refusal(Stay $stay, int $alreadyInCountry = 0): string
     {
-        return max(0, $this->limit - $alreadyInCountry - $stay->nightsInYear($this->year));
+        if ($stay->nights() < self::DAYS_PER_STAY) {
+            return 'a stay runs 364 days';
+        }
+        if ($stay->from < $this->opensOn()) {
+            return 'a stay begins in the last 182 days of ' . $this->year;
+        }
+        if ($stay->to >= sprintf('%04d-01-01', $this->year + 2)) {
+            return 'a stay ends inside ' . ($this->year + 1);
+        }
+        if ($alreadyInCountry > 0) {
+            return 'the member already holds a stay in this country';
+        }
+
+        return '';
     }
 }

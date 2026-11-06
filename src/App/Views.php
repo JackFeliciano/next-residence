@@ -20,6 +20,8 @@ final class Views
     /** @var array<string, mixed> */
     private array $copy;
 
+    private int $year = 2027;
+
     public function __construct(private readonly string $base)
     {
         $file = dirname(__DIR__, 2) . '/copy/next.json';
@@ -96,14 +98,14 @@ final class Views
         $body .= '</section>' . "\n";
 
         $body .= '<section class="bookings">' . "\n";
-        $body .= '<h2>Bookings against the year 2027</h2>' . "\n";
-        $body .= '<p class="note">Four requests. The booking answers with the first condition that failed.</p>' . "\n";
+        $body .= '<h2>Five bookings against the year 2027</h2>' . "\n";
+        $body .= '<p class="note">Each request asks for a full year in one country. The booking answers with the first condition that failed.</p>' . "\n";
         $body .= '<table><thead><tr><th>Stay</th><th>House</th><th>Country</th><th>Nights</th><th>Answer</th></tr></thead><tbody>' . "\n";
         foreach (Sample::bookings() as $booking) {
             $body .= $this->bookingRow($booking);
         }
         $body .= '</tbody></table>' . "\n";
-        $body .= '<h2>A stay that crosses New Year</h2>' . "\n";
+        $body .= '<h2>One smart stay, read day by day</h2>' . "\n";
         $body .= $this->crossingRow(Sample::smartStay(), 2027) . "\n";
         $body .= '</section>' . "\n";
 
@@ -112,15 +114,20 @@ final class Views
 
     private function card(House $house): string
     {
-        $months = implode(' ', array_map(static fn (int $m): string => str_pad((string) $m, 2, '0', STR_PAD_LEFT), $house->openMonths));
 
         return '<article class="card" data-city="' . $this->h($house->city) . '" data-country="' . $this->h($house->country) . '" data-name="' . $this->h($house->handle) . '">' . "\n"
             . '<div class="photo" aria-hidden="true"><span>' . $this->h($house->country) . '</span></div>' . "\n"
             . '<h3>' . $this->h($house->city) . '</h3>' . "\n"
             . '<p class="where">' . $this->h($house->country) . ' <span class="dot">.</span> ' . $house->beds . ' beds</p>' . "\n"
-            . '<p class="months">Open ' . $this->h($months) . '</p>' . "\n"
+            . '<p class="span">' . $this->h($this->stayLine($house)) . '</p>' . "\n"
             . '<a class="open" href="house/' . $this->h($house->handle) . '">See the house</a>' . "\n"
             . '</article>' . "\n";
+    }
+
+    /** The stay window each card carries, so a house reads as bookable. */
+    private function stayLine(House $house): string
+    {
+        return 'One stay, 364 days, crossing ' . $this->year . ' and ' . ($this->year + 1);
     }
 
     private function bookingRow(Booking $booking): string
@@ -145,14 +152,13 @@ final class Views
 
     public function house(House $house): string
     {
-        $months = implode(', ', array_map(static fn (int $m): string => date('F', mktime(0, 0, 0, $m, 1)), $house->openMonths));
         $body = '<header class="top">' . "\n"
             . '<span class="brand"><a href="./">NEXT Residence</a></span>' . "\n"
             . '</header>' . "\n";
         $body .= '<div class="photo big" aria-hidden="true"><span>' . $this->h($house->country) . '</span></div>' . "\n";
         $body .= '<h1>' . $this->h($house->city) . '</h1>' . "\n";
         $body .= '<p class="where">' . $this->h($house->country) . ' <span class="dot">.</span> ' . $house->beds . ' beds</p>' . "\n";
-        $body .= '<p class="months">Open in ' . $this->h($months) . '.</p>' . "\n";
+        $body .= '<p class="months">One stay, 364 days, crossing ' . $this->year . ' and ' . ($this->year + 1) . '.</p>' . "\n";
         $body .= '<p>Members book this house through the network office. The calendar runs twelve months at a time, and a stay may cross into the next calendar year. Each calendar year holds 182 days in this country.</p>' . "\n";
 
         return $this->page($house->city . ', ' . $house->country, $body);

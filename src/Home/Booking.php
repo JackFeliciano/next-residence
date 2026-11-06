@@ -7,7 +7,8 @@ namespace NextResidence\Home;
 /**
  * A stay placed against a house and a year. The booking answers yes only when
  * all three agree, and it says which one disagreed, because a member who is
- * told no learns nothing from a bare refusal.
+ * told no learns nothing from a bare refusal. The house is read first, so a
+ * closed month or a party too large reaches the member before the calendar.
  */
 final class Booking
 {
@@ -34,22 +35,14 @@ final class Booking
         if ($this->stay->people > $this->house->beds) {
             return 'the house has ' . $this->house->beds . ' beds';
         }
-        if (!$this->house->opensOn($this->stay->from)) {
-            return 'the house is closed in month ' . substr($this->stay->from, 5, 2);
-        }
-        if ($this->stay->from < $this->window->start() || $this->stay->to > $this->window->end()) {
-            return 'the stay falls outside the year ' . $this->window->year;
-        }
-        if (!$this->window->admits($this->stay, $this->daysAlreadyInCountry)) {
-            return 'the year holds no more days in ' . $this->house->country;
-        }
-
-        return '';
+        return $this->window->refusal($this->stay, $this->daysAlreadyInCountry);
     }
 
+    /** Nights the stay leaves unused in the two calendar years it touches. */
     public function nightsLeft(): int
     {
-        return $this->window->left($this->stay, $this->daysAlreadyInCountry);
+        return $this->stay->nightsInYear($this->window->year)
+            + $this->stay->nightsInYear($this->window->year + 1) - Window::DAYS_PER_STAY;
     }
 
     /** @return array<string, mixed> */
@@ -58,7 +51,7 @@ final class Booking
         return [
             'stay' => $this->stay->toArray(),
             'house' => $this->house->toArray(),
-            'window' => ['year' => $this->window->year, 'limit' => $this->window->limit],
+            'window' => ['year' => $this->window->year, 'days' => Window::DAYS_PER_STAY],
             'admitted' => $this->admits(),
             'reason' => $this->reason(),
             'nights_left' => $this->nightsLeft(),

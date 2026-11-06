@@ -2,57 +2,63 @@
 
 declare(strict_types=1);
 
-use NextResidence\Home\Booking;
-use NextResidence\Home\House;
 use NextResidence\Home\Stay;
 use NextResidence\Home\Window;
 use NextResidence\Tests\Assert;
 
 return [
-    ['the window grants 182 days', static function (): void {
-        Assert::same(182, (new Window(2027))->limit);
-        Assert::same('2027-01-01', (new Window(2027))->start());
-        Assert::same('2028-01-01', (new Window(2027))->end());
-    }],
-    ['the window admits a stay inside the year', static function (): void {
+    ['the window runs two calendar years', static function (): void {
         $window = new Window(2027);
-        Assert::true($window->admits(new Stay('tbilisi-mtkvari', '2027-03-01', '2027-04-01', 2)));
+        Assert::same('2027-01-01', $window->start());
+        Assert::same('2029-01-01', $window->end());
     }],
-    ['the window refuses a stay that ends after the year', static function (): void {
+    ['a stay opens on the 183rd day and closes on the 182nd', static function (): void {
         $window = new Window(2027);
-        Assert::false($window->admits(new Stay('panama-casco', '2027-12-20', '2028-01-10', 2)));
+        Assert::same('2027-07-03', $window->opensOn());
+        Assert::same('2028-07-02', $window->closesOn());
     }],
-    ['the window counts only the nights of its own year', static function (): void {
-        $stay = new Stay('panama-casco', '2027-12-20', '2028-01-10', 2);
-        Assert::same(12, $stay->nightsInYear(2027));
-        Assert::same(9, $stay->nightsInYear(2028));
-    }],
-    ['a country holding 175 days takes 7 more and not 8', static function (): void {
+    ['a full year in one country is admitted', static function (): void {
         $window = new Window(2027);
-        Assert::true($window->admits(new Stay('athens-plaka', '2027-05-01', '2027-05-08', 2), 175));
-        Assert::false($window->admits(new Stay('athens-plaka', '2027-05-01', '2027-05-09', 2), 175));
+        Assert::true($window->admits(new Stay('tbilisi-mtkvari', '2027-09-12', '2028-09-10', 2)));
     }],
-    ['the days left fall as the country count rises', static function (): void {
+    ['the earliest admitted stay starts on the opening day', static function (): void {
         $window = new Window(2027);
-        $stay = new Stay('athens-plaka', '2027-05-01', '2027-05-11', 2);
-        Assert::same(172, $window->left($stay));
-        Assert::same(102, $window->left($stay, 70));
+        Assert::true($window->admits(new Stay('tbilisi-mtkvari', '2027-07-03', '2028-07-01', 2)));
     }],
-    ['a limit outside the calendar is refused', static function (): void {
+    ['the latest admitted stay starts in the last days of the year', static function (): void {
+        $window = new Window(2027);
+        Assert::true($window->admits(new Stay('tbilisi-mtkvari', '2027-12-20', '2028-12-18', 2)));
+    }],
+    ['one day short of a year is refused', static function (): void {
+        $window = new Window(2027);
+        $stay = new Stay('tbilisi-mtkvari', '2027-09-12', '2028-09-09', 2);
+        Assert::false($window->admits($stay));
+        Assert::same('a stay runs 364 days', $window->refusal($stay));
+    }],
+    ['a stay that starts in June is refused', static function (): void {
+        $window = new Window(2027);
+        $stay = new Stay('tbilisi-mtkvari', '2027-06-02', '2028-05-31', 2);
+        Assert::false($window->admits($stay));
+        Assert::same('a stay begins in the last 182 days of 2027', $window->refusal($stay));
+    }],
+    ['a stay that runs into a third year is refused', static function (): void {
+        $window = new Window(2027);
+        $stay = new Stay('tbilisi-mtkvari', '2028-01-02', '2029-01-01', 2);
+        Assert::false($window->admits($stay));
+        Assert::same('a stay ends inside 2028', $window->refusal($stay));
+    }],
+    ['a second stay in the same country is refused', static function (): void {
+        $window = new Window(2027);
+        $stay = new Stay('tbilisi-mtkvari', '2027-09-12', '2028-09-10', 2);
+        Assert::same('the member already holds a stay in this country', $window->refusal($stay, 1));
+    }],
+    ['a year outside the calendar is refused', static function (): void {
         try {
-            new Window(2027, 400);
+            new Window(1990);
             Assert::true(false, 'expected a rejection');
         } catch (\InvalidArgumentException) {
             Assert::true(true);
         }
     }],
-    ['a booking names the country in its refusal', static function (): void {
-        $booking = new Booking(
-            new Stay('athens-plaka', '2027-05-01', '2027-05-09', 2),
-            new House('athens-plaka', 'Athens', 'Greece', 6, [5]),
-            new Window(2027),
-            175,
-        );
-        Assert::same('the year holds no more days in Greece', $booking->reason());
-    }],
 ];
+

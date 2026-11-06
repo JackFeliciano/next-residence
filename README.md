@@ -1,77 +1,81 @@
 # NEXT Residence
 
-NEXT Residence connects wealthy international families through a selective home
-exchange. Members book annual stays in residences owned by other members across
-fifteen countries. A stay can cross New Year and run into the next calendar year,
-and the limit is 182 days per calendar year, counted per country.
+NEXT Residence is a selective home exchange network for international families. Members book stays in houses held by the network across fifteen countries. The project models houses, stays, booking windows and booking decisions, and provides a small web demo of the rules.
 
-Each house carries a handle, a city, a country, a bed count and the months it
-opens. Each stay carries two calendar days and a headcount. Each booking names
-the first condition that refused it, so a member who is told no learns why.
+## The stay model
 
-A support desk covers tax residency, tax consulting, banking, financial services,
-insurance, health plans, home schooling, residence ships and investment property
-management.
+Every stay runs exactly 364 days in one country and crosses a calendar year boundary. It begins within the last 182 days of one calendar year and ends within the first 182 days of the next.
 
-NEXT Residence uses plain PHP 8.2, without dependencies or a database server.
+This structure keeps a member below the 183-day threshold that a country uses to claim tax residence. Each country can hold one stay at a time for a member.
 
-## The three pieces
+The model uses five main types:
 
-A house carries a name, a city, how many beds it holds and the months it opens.
-A house in Kyoto opens in spring and autumn, so a traveller who wants it in
-November learns it from the house and not from a support ticket.
+    House carries a handle, city, country, bed count and photograph.
+    Stay carries a house, two calendar days and a headcount.
+    Window holds the two calendar years a stay may touch.
+    Booking puts a stay against a house and a window.
+    Sample provides the example houses and bookings used by the demo.
 
-A stay carries a house, two calendar days and a headcount. It refuses a range
-that runs backwards, a range with no nights and a party of nobody, because each
-of those arrives from a form somebody filled in badly.
+A booking checks the conditions in order and names the first condition that refuses it. This gives the member a clear reason for the decision.
 
-A window is one calendar year and the 182 days it grants in one country. It
-refuses a stay that ends after the year, and it refuses a stay that pushes the
-country past its limit. A crossing stay splits its nights by year, so a booking
-that runs from November into January is counted twice, once on each side.
+The refusal reasons cover a stay that names another house, a house with 4 beds, an incorrect stay length, a start outside the permitted part of the year, an end outside the following year, and an existing stay held by the member in the same country.
 
-The samples hold fifteen houses in the fifteen countries, and four bookings that
-show two admitted and two refused. The tests cover the night split, the per
-country limit and the refusal that names its cause.
+## Project structure
 
-## The booking
+    src/
+      Home/
+        House
+        Stay
+        Window
+        Booking
+        Sample
+      App/
+        Router
+        Views
+        Front
+    showroom/
+      front controller
+      stylesheet
+    tests/
+      runner
+      assertions
+      four test files
+    deploy/
+      systemd unit
+      nginx location
 
-A booking puts a stay against a house and a window and answers yes only when all
-three agree. When they do not, it names the first condition that failed:
+src/Home/ contains the booking model and its rules. src/App/ contains the router and presentation layer. showroom/ contains the web entry point and stylesheet. tests/ contains the test runner, assertions and four test files. deploy/ contains the systemd unit and nginx location.
 
-    the stay names another house
-    the house has 4 beds
-    the house is closed in month 11
-    the stay falls outside the window
+## Requirements
 
-A bare refusal teaches a traveller nothing. The reason is the whole point of the
-class.
+The project uses plain PHP 8.2. It has no framework, database, Composer setup or external dependencies.
 
-## Running it
+## Run the tests
 
-    php tests/run.php      the suite, 27 checks, no dependencies
+Run the complete test suite from the project root:
+
+    php tests/run.php
+
+The suite contains 41 checks and needs no dependencies.
+
+## Run the demo
+
+Start the built-in PHP server:
+
     php -S 127.0.0.1:8094 -t showroom showroom/index.php
 
-Then open `http://127.0.0.1:8094/`. The prefix lives in NEXT_BASE, which
-defaults to `/`.
+The demo uses NEXT_BASE as its URL prefix. It defaults to /.
 
-Routes: `/` the network and three worked bookings, `/house/{handle}` one house,
-`/health`.
+The available routes are:
 
-## Layout
+    / displays the network and five worked bookings.
+    /house/{handle} displays one house.
+    /health provides the health route.
 
-    src/Home/     House, Stay, Window, Booking, Sample
-    src/App/      Router, Views, Front
-    showroom/     the front controller and the stylesheet
-    tests/        the runner, the assertions and five test files
-    deploy/       the systemd unit and the nginx location
+## Sample data
 
-## The sample
-
-Four invented houses and three invented bookings. One is admitted and two are
-refused, one for a closed month and one for a party larger than the house. The
-page shows all three so a reader sees the rule working in both directions.
+The sample contains fifteen houses in fifteen countries and five bookings. Two bookings are admitted and three are refused. The worked examples show how the booking rules handle both outcomes.
 
 ## Licence
 
-Mozilla Public License 2.0. See LICENSE.
+NEXT Residence is licensed under the Mozilla Public License 2.0. See the licence file for the terms.

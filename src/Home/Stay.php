@@ -6,8 +6,8 @@ namespace NextResidence\Home;
 
 /**
  * One stay in one house. A stay names the house, the two dates and how many
- * people sleep there, and it refuses a range that runs backwards. A stay can
- * cross a year boundary, because members plan twelve months at a time.
+ * people sleep there, and it refuses a range that runs backwards. A stay is a
+ * full year of presence, so it always crosses a year boundary.
  */
 final class Stay
 {
@@ -62,6 +62,26 @@ final class Stay
         }
 
         return (int) (new \DateTimeImmutable($start))->diff(new \DateTimeImmutable($end))->days;
+    }
+
+    /**
+     * The nights this stay puts inside the twelve months that end on a given
+     * day. A tax authority counts backwards from each day of presence, so a
+     * member who spreads one country across two calendar years still has to
+     * keep the rolling total under the limit.
+     */
+    public function nightsInTrailingYear(string $day): int
+    {
+        $end = new \DateTimeImmutable($day);
+        $start = $end->modify('-1 year');
+
+        $from = max($this->from, $start->format('Y-m-d'));
+        $to = min($this->to, $end->format('Y-m-d'));
+        if ($to <= $from) {
+            return 0;
+        }
+
+        return (int) (new \DateTimeImmutable($from))->diff(new \DateTimeImmutable($to))->days;
     }
 
     /** @return array<string, mixed> */
