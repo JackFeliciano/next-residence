@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace NextResidence\Home;
 
 /**
- * A house in the network. It carries a name, a city, how many people sleep
- * there and the months it opens. Everything a booking needs, nothing about who
- * owns it.
+ * A house a member has put in the network. It carries the country it stands in,
+ * the city, how many people sleep there and the months it opens. The photograph
+ * is a file name only. Nothing here says who owns it.
  */
 final class House
 {
@@ -15,11 +15,13 @@ final class House
     public function __construct(
         public readonly string $handle,
         public readonly string $city,
+        public readonly string $country,
         public readonly int $beds,
         public readonly array $openMonths,
+        public readonly string $photo = '',
     ) {
-        if ($handle === '' || $city === '') {
-            throw new \InvalidArgumentException('a house names itself and its city');
+        if ($handle === '' || $city === '' || $country === '') {
+            throw new \InvalidArgumentException('a house names itself, its city and its country');
         }
         if ($beds < 1) {
             throw new \InvalidArgumentException('a house has at least one bed');
@@ -50,8 +52,10 @@ final class House
         return [
             'handle' => $this->handle,
             'city' => $this->city,
+            'country' => $this->country,
             'beds' => $this->beds,
             'open_months' => $this->openMonths,
+            'photo' => $this->photo,
         ];
     }
 }

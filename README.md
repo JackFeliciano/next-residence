@@ -1,10 +1,17 @@
 # NEXT Residence
 
-NEXT Residence connects wealthy international families through a selective home exchange. Members book monthly stays in residences owned by other members across fifteen countries and can spend up to 182 days per calendar year across the network.
+NEXT Residence connects wealthy international families through a selective home
+exchange. Members book annual stays in residences owned by other members across
+fifteen countries. A stay can cross New Year and run into the next calendar year,
+and the limit is 182 days per calendar year, counted per country.
 
-Each house has a name, city, country and availability window defined by month. Each booking identifies a house, member and month. The system accepts or rejects each booking and reports the first condition that fails.
+Each house carries a handle, a city, a country, a bed count and the months it
+opens. Each stay carries two calendar days and a headcount. Each booking names
+the first condition that refused it, so a member who is told no learns why.
 
-A support desk covers tax residency, tax consulting, banking, financial services, insurance, health plans, home schooling, residence ships and investment property management.
+A support desk covers tax residency, tax consulting, banking, financial services,
+insurance, health plans, home schooling, residence ships and investment property
+management.
 
 NEXT Residence uses plain PHP 8.2, without dependencies or a database server.
 
@@ -18,9 +25,14 @@ A stay carries a house, two calendar days and a headcount. It refuses a range
 that runs backwards, a range with no nights and a party of nobody, because each
 of those arrives from a form somebody filled in badly.
 
-A window is what the network promises: a traveller holds a stretch of days and
-every stay has to fall inside it. The window reports how many nights are left
-after a stay, so the next booking starts from the remainder.
+A window is one calendar year and the 182 days it grants in one country. It
+refuses a stay that ends after the year, and it refuses a stay that pushes the
+country past its limit. A crossing stay splits its nights by year, so a booking
+that runs from November into January is counted twice, once on each side.
+
+The samples hold fifteen houses in the fifteen countries, and four bookings that
+show two admitted and two refused. The tests cover the night split, the per
+country limit and the refusal that names its cause.
 
 ## The booking
 

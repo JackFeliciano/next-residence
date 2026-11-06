@@ -15,10 +15,11 @@ $prefix = rtrim($base, '/');
 if ($prefix !== '' && str_starts_with($path, $prefix)) {
     $path = substr($path, strlen($prefix));
 }
-if ($path === '/assets/site.css') {
-    header('Content-Type: text/css; charset=utf-8');
+if (preg_match('#^/assets/(site\.css|app\.js)$#', $path, $m) === 1) {
+    $type = $m[1] === 'site.css' ? 'text/css' : 'application/javascript';
+    header('Content-Type: ' . $type . '; charset=utf-8');
     header('Cache-Control: public, max-age=300');
-    echo file_get_contents(__DIR__ . '/assets/site.css');
+    echo file_get_contents(__DIR__ . '/assets/' . $m[1]);
 
     return;
 }

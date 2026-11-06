@@ -7,20 +7,37 @@ namespace NextResidence\App;
 use NextResidence\Home\Booking;
 use NextResidence\Home\House;
 use NextResidence\Home\Sample;
+use NextResidence\Home\Stay;
 
 /**
  * The HTML. The base prefix is written into a base element so every relative
- * link keeps working behind a location block.
+ * link keeps working behind a location block. The page reads as a residence
+ * catalog: a search bar, filter chips, a grid of houses and the rules beneath.
+ * The prose comes from the copy file written by the writing hand.
  */
 final class Views
 {
+    /** @var array<string, mixed> */
+    private array $copy;
+
     public function __construct(private readonly string $base)
     {
+        $file = dirname(__DIR__, 2) . '/copy/next.json';
+        $this->copy = is_file($file)
+            ? (array) json_decode((string) file_get_contents($file), true)
+            : [];
     }
 
     private function h(?string $value): string
     {
         return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
+    }
+
+    private function c(string $key, string $fallback = ''): string
+    {
+        $value = $this->copy[$key] ?? $fallback;
+
+        return is_string($value) ? $value : $fallback;
     }
 
     public function page(string $title, string $body): string
@@ -34,52 +51,76 @@ final class Views
             . '<base href="' . $this->h($this->base) . '">' . "\n"
             . '<link rel="stylesheet" href="assets/site.css">' . "\n"
             . '</head>' . "\n"
-            . '<body>' . "\n<main>
-" . $body . '</main>' . "\n</body>\n</html>\n";
+            . '<body>' . "\n" . '<main>' . "\n" . $body . '</main>' . "\n"
+            . '<script src="assets/app.js"></script>' . "\n"
+            . '</body>' . "\n</html>\n";
     }
 
     public function home(): string
     {
-        $body = '<h1>' . $this->h('NEXT Residence Network') . '</h1>' . "\n";
-        $body .= '<p class="led">' . $this->h('NEXT Residence gives wealthy international families access to privately owned homes across fifteen countries through a selective home exchange. Members book stays month by month in other members\' residences and spend up to 182 days per calendar year across the network. A dedicated support desk helps members coordinate the financial, legal, educational and practical demands of international living.') . '</p>' . "\n";
-        $body .= '<h2>' . $this->h('The Fifteen Countries') . '</h2>' . "\n";
-        $body .= '<p>' . $this->h('The network connects member-owned residences across Georgia, Panama, Malta, England, Italy, Spain, Austria, Czechia, Hungary, Romania, Slovenia, Croatia, Serbia, Greece and Bulgaria.') . '</p>' . "\n";
-        $body .= '<h2>Houses in the Network</h2>' . "\n";
-        $body .= '<table><thead><tr><th>House</th><th>City</th><th>Beds</th><th>Open months</th></tr></thead><tbody>' . "\n";
+        $body = '<header class="top">' . "\n"
+            . '<span class="brand">NEXT Residence</span>' . "\n"
+            . '<span class="count">' . count(Sample::houses()) . ' houses in ' . count(Sample::COUNTRIES) . ' countries</span>' . "\n"
+            . '</header>' . "\n";
+
+        $body .= '<form class="search" role="search" onsubmit="return false">' . "\n"
+            . '<input id="q" type="search" autocomplete="off" placeholder="' . $this->h($this->c('placeholder', 'Search')) . '">' . "\n"
+            . '</form>' . "\n";
+
+        $body .= '<nav class="chips" aria-label="Filters">' . "\n";
+        foreach (Sample::COUNTRIES as $country) {
+            $body .= '<button type="button" class="chip" data-country="' . $this->h($country) . '">' . $this->h($country) . '</button>' . "\n";
+        }
+        $body .= '</nav>' . "\n";
+
+        $body .= '<p class="countryline">' . $this->h($this->c('countryline')) . '</p>' . "\n";
+
+        $body .= '<div class="grid" id="grid">' . "\n";
         foreach (Sample::houses() as $house) {
-            $body .= $this->houseRow($house);
+            $body .= $this->card($house);
         }
-        $body .= '</tbody></table>' . "\n";
-        $body .= '<h2>Support Desk</h2>' . "\n" . '<ul class="services">' . "\n";
-        foreach ([
-            ['Tax residency', 'Guidance on tax residency across countries and the consequences of international mobility.'],
-            ['Tax consulting', 'Tax consulting for members with homes and interests across multiple jurisdictions.'],
-            ['Banking and financial services', 'Access to banking and financial services for an international lifestyle.'],
-            ['Insurance plans', 'Insurance plans that support members and their international lives.'],
-            ['Health plans', 'Health plans for members and their families across countries.'],
-            ['Home schooling', 'Schooling support for children who study at home.'],
-            ['Residence ships', 'Residence ship options for members who extend their lives beyond land-based homes.'],
-            ['Property investment management', 'Management of members\' own properties as investments.'],
-        ] as [$serviceName, $serviceLine]) {
-            $body .= '<li><strong>' . $this->h($serviceName) . '</strong> ' . $this->h($serviceLine) . '</li>' . "\n";
-        }
-        $body .= '</ul>' . "\n";
-        $body .= '<h2>' . $this->h('The 182 Day Rule') . '</h2>' . "\n";
-        $body .= '<p>' . $this->h('Members can spend up to 182 days per calendar year across the residence network. The system counts booked days separately for each country and tracks the calendar year. It warns members before they cross a limit, helping them understand the tax residency consequences of their travel.') . '</p>' . "\n";
-        $body .= '<h2>The Window and Three Bookings</h2>' . "\n";
-        $body .= '<p>The window runs from 2026-11-01 to 2026-12-01. One booking fits. The other two are refused, and each refusal names the condition that failed.</p>' . "\n";
-        $body .= '<table><thead><tr><th>Stay</th><th>House</th><th>Nights</th><th>Answer</th></tr></thead><tbody>' . "\n";
+        $body .= '</div>' . "\n";
+
+        $body .= '<p class="empty" id="empty" hidden>' . $this->h($this->c('empty')) . '</p>' . "\n";
+
+        $body .= '<section class="rules">' . "\n";
+        $body .= '<h2>Annual stays, and the year they cross</h2>' . "\n";
+        $body .= '<p>' . $this->h($this->c('stays')) . '</p>' . "\n";
+        $body .= '<h2>182 days, counted per country</h2>' . "\n";
+        $body .= '<p>' . $this->h($this->c('rule')) . '</p>' . "\n";
+        $body .= '</section>' . "\n";
+
+        $body .= '<section class="desk">' . "\n";
+        $body .= '<h2>The support desk</h2>' . "\n";
+        $body .= '<p>' . $this->h($this->c('support')) . '</p>' . "\n";
+        $body .= '</section>' . "\n";
+
+        $body .= '<section class="bookings">' . "\n";
+        $body .= '<h2>Bookings against the year 2027</h2>' . "\n";
+        $body .= '<p class="note">Four requests. The booking answers with the first condition that failed.</p>' . "\n";
+        $body .= '<table><thead><tr><th>Stay</th><th>House</th><th>Country</th><th>Nights</th><th>Answer</th></tr></thead><tbody>' . "\n";
         foreach (Sample::bookings() as $booking) {
             $body .= $this->bookingRow($booking);
         }
+        $body .= '</tbody></table>' . "\n";
+        $body .= '<h2>A stay that crosses New Year</h2>' . "\n";
+        $body .= $this->crossingRow(Sample::smartStay(), 2027) . "\n";
+        $body .= '</section>' . "\n";
 
-        return $this->page('NEXT Residence Network', $body . '</tbody></table>' . "\n");
+        return $this->page('NEXT Residence', $body);
     }
 
-    private function houseRow(House $house): string
+    private function card(House $house): string
     {
-        return '<tr><td>' . $this->h($house->handle) . '</td><td>' . $this->h($house->city)
-            . '</td><td>' . $house->beds . '</td><td>' . $this->h(implode(' ', $house->openMonths)) . '</td></tr>' . "\n";
+        $months = implode(' ', array_map(static fn (int $m): string => str_pad((string) $m, 2, '0', STR_PAD_LEFT), $house->openMonths));
+
+        return '<article class="card" data-city="' . $this->h($house->city) . '" data-country="' . $this->h($house->country) . '" data-name="' . $this->h($house->handle) . '">' . "\n"
+            . '<div class="photo" aria-hidden="true"><span>' . $this->h($house->country) . '</span></div>' . "\n"
+            . '<h3>' . $this->h($house->city) . '</h3>' . "\n"
+            . '<p class="where">' . $this->h($house->country) . ' <span class="dot">.</span> ' . $house->beds . ' beds</p>' . "\n"
+            . '<p class="months">Open ' . $this->h($months) . '</p>' . "\n"
+            . '<a class="open" href="house/' . $this->h($house->handle) . '">See the house</a>' . "\n"
+            . '</article>' . "\n";
     }
 
     private function bookingRow(Booking $booking): string
@@ -89,9 +130,32 @@ final class Views
             : '<span class="no">' . $this->h($booking->reason()) . '</span>';
 
         return '<tr><td>' . $this->h($booking->stay->from) . ' to ' . $this->h($booking->stay->to)
-            . '</td><td>' . $this->h($booking->stay->house)
+            . '</td><td>' . $this->h($booking->house->city)
+            . '</td><td>' . $this->h($booking->house->country)
             . '</td><td>' . $booking->stay->nights()
             . '</td><td>' . $answer . '</td></tr>' . "\n";
+    }
+
+    private function crossingRow(Stay $stay, int $year): string
+    {
+        return '<p class="crossing">' . $this->h($stay->from) . ' to ' . $this->h($stay->to)
+            . ' runs ' . $stay->nights() . ' nights, of which ' . $stay->nightsInYear($year)
+            . ' fall in ' . $year . ' and ' . $stay->nightsInYear($year + 1) . ' fall in ' . ($year + 1) . '.</p>';
+    }
+
+    public function house(House $house): string
+    {
+        $months = implode(', ', array_map(static fn (int $m): string => date('F', mktime(0, 0, 0, $m, 1)), $house->openMonths));
+        $body = '<header class="top">' . "\n"
+            . '<span class="brand"><a href="./">NEXT Residence</a></span>' . "\n"
+            . '</header>' . "\n";
+        $body .= '<div class="photo big" aria-hidden="true"><span>' . $this->h($house->country) . '</span></div>' . "\n";
+        $body .= '<h1>' . $this->h($house->city) . '</h1>' . "\n";
+        $body .= '<p class="where">' . $this->h($house->country) . ' <span class="dot">.</span> ' . $house->beds . ' beds</p>' . "\n";
+        $body .= '<p class="months">Open in ' . $this->h($months) . '.</p>' . "\n";
+        $body .= '<p>Members book this house through the network office. The calendar runs twelve months at a time, and a stay may cross into the next calendar year. Each calendar year holds 182 days in this country.</p>' . "\n";
+
+        return $this->page($house->city . ', ' . $house->country, $body);
     }
 
     public function notFound(string $path): string

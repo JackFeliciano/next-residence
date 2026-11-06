@@ -5,34 +5,48 @@ declare(strict_types=1);
 namespace NextResidence\Home;
 
 /**
- * The rule the network runs on. A family moves between houses as it moves
- * between countries, and a window is the promise that a gap between two stays
- * stays short. The window holds the nights it grants and refuses a stay that
- * overruns what is left.
+ * The rule the network runs on. A member may spend 182 days per calendar year
+ * across the whole network, and the window counts those days per country,
+ * because a tax authority reads the days per country and not the total. It
+ * refuses a stay that overruns the year or pushes one country past its limit.
  */
 final class Window
 {
+    public const DAYS_PER_YEAR = 182;
+
     public function __construct(
-        public readonly string $from,
-        public readonly string $to,
+        public readonly int $year,
+        public readonly int $limit = self::DAYS_PER_YEAR,
     ) {
-        if (!Stay::isDay($from) || !Stay::isDay($to) || $to <= $from) {
-            throw new \InvalidArgumentException('a window needs two ordered days');
+        if ($year < 2000 || $year > 2100) {
+            throw new \InvalidArgumentException('a window names one calendar year');
+        }
+        if ($limit < 1 || $limit > 366) {
+            throw new \InvalidArgumentException('a limit runs from one day to a full year');
         }
     }
 
-    public function nights(): int
+    public function start(): string
     {
-        return (int) (new \DateTimeImmutable($this->from))->diff(new \DateTimeImmutable($this->to))->days;
+        return sprintf('%04d-01-01', $this->year);
     }
 
-    public function admits(Stay $stay): bool
+    public function end(): string
     {
-        return $stay->from >= $this->from && $stay->to <= $this->to;
+        return sprintf('%04d-01-01', $this->year + 1);
     }
 
-    public function left(Stay $stay): int
+    public function admits(Stay $stay, int $alreadyInCountry = 0): bool
     {
-        return max(0, $this->nights() - $stay->nights());
+        if ($stay->from < $this->start() || $stay->to > $this->end()) {
+            return false;
+        }
+
+        return $alreadyInCountry + $stay->nightsInYear($this->year) <= $this->limit;
+    }
+
+    public function left(Stay $stay, int $alreadyInCountry = 0): int
+    {
+        return max(0, $this->limit - $alreadyInCountry - $stay->nightsInYear($this->year));
     }
 }

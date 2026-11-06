@@ -30,12 +30,7 @@ final class Front
                 return [404, ['html' => $views->notFound($handle)]];
             }
 
-            $body = '<h1>' . htmlspecialchars($house->city, ENT_QUOTES, 'UTF-8') . '</h1>' . "\n"
-                . '<p class="lead">' . htmlspecialchars($house->handle, ENT_QUOTES, 'UTF-8')
-                . ', ' . $house->beds . ' beds, open in months '
-                . htmlspecialchars(implode(' ', $house->openMonths), ENT_QUOTES, 'UTF-8') . '.</p>';
-
-            return [200, ['html' => $views->page($house->city, $body)]];
+            return [200, ['html' => $views->house($house)]];
         });
 
         $router->get('/health', static fn (): array => [

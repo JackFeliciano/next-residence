@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace NextResidence\Home;
 
 /**
- * A stay placed against a house and a window. The booking answers yes only when
- * all three agree, and it says which one disagreed, because a traveller who is
+ * A stay placed against a house and a year. The booking answers yes only when
+ * all three agree, and it says which one disagreed, because a member who is
  * told no learns nothing from a bare refusal.
  */
 final class Booking
@@ -15,12 +15,14 @@ final class Booking
         public readonly Stay $stay,
         public readonly House $house,
         public readonly Window $window,
+        public readonly int $daysAlreadyInCountry = 0,
     ) {
     }
 
     public function admits(): bool
     {
-        return $this->house->fits($this->stay) && $this->window->admits($this->stay);
+        return $this->house->fits($this->stay)
+            && $this->window->admits($this->stay, $this->daysAlreadyInCountry);
     }
 
     /** The first condition that failed, or an empty string when nothing did. */
@@ -35,8 +37,11 @@ final class Booking
         if (!$this->house->opensOn($this->stay->from)) {
             return 'the house is closed in month ' . substr($this->stay->from, 5, 2);
         }
-        if (!$this->window->admits($this->stay)) {
-            return 'the stay falls outside the window';
+        if ($this->stay->from < $this->window->start() || $this->stay->to > $this->window->end()) {
+            return 'the stay falls outside the year ' . $this->window->year;
+        }
+        if (!$this->window->admits($this->stay, $this->daysAlreadyInCountry)) {
+            return 'the year holds no more days in ' . $this->house->country;
         }
 
         return '';
@@ -44,7 +49,7 @@ final class Booking
 
     public function nightsLeft(): int
     {
-        return $this->window->left($this->stay);
+        return $this->window->left($this->stay, $this->daysAlreadyInCountry);
     }
 
     /** @return array<string, mixed> */
@@ -53,7 +58,7 @@ final class Booking
         return [
             'stay' => $this->stay->toArray(),
             'house' => $this->house->toArray(),
-            'window' => ['from' => $this->window->from, 'to' => $this->window->to, 'nights' => $this->window->nights()],
+            'window' => ['year' => $this->window->year, 'limit' => $this->window->limit],
             'admitted' => $this->admits(),
             'reason' => $this->reason(),
             'nights_left' => $this->nightsLeft(),

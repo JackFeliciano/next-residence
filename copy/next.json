@@ -1,0 +1,13 @@
+{
+ "placeholder": "Search by house, city or country",
+ "filters": [
+  "Country",
+  "City",
+  "Availability"
+ ],
+ "countryline": "Georgia, Panama, Malta, England, Italy, Spain, Austria, Czechia, Hungary, Romania, Slovenia, Croatia, Serbia, Greece, Bulgaria",
+ "stays": "Plan your residence calendar twelve months at a time. Book annual stays in other members' houses and offer your own residence to the network in return. Your booking can cross New Year and continue into the next calendar year, so your annual plan follows your actual stay dates.",
+ "rule": "Track your days separately for each country and calendar year. Each country's tax authority counts your presence within its own borders. The network limit allows up to 182 days per calendar year. When a stay crosses New Year, count its days in the corresponding year.",
+ "support": "The support desk helps coordinate the demands of international living. Members can access tax residency guidance, tax consulting, banking, financial services, insurance, health plans, home schooling, residence ships and management of their own property as an investment.",
+ "empty": "No houses match your search. Try another country, city or availability period."
+}
