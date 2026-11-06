@@ -77,8 +77,8 @@ final class Sample
         return [
             new Booking(new Stay('tbilisi-mtkvari', '2027-03-04', '2027-03-20', 5), self::house('tbilisi-mtkvari'), $year),
             new Booking(new Stay('sofia-vitosha', '2027-07-02', '2027-07-12', 4), self::house('sofia-vitosha'), $year),
-            new Booking(new Stay('como-lake', '2027-01-08', '2027-01-18', 4), self::house('como-lake'), $year),
-            new Booking(new Stay('athens-plaka', '2027-09-01', '2027-09-15', 8), self::house('athens-plaka'), $year),
+            new Booking(new Stay('prague-old-town', '2027-02-08', '2027-02-18', 4), self::house('prague-old-town'), $year),
+            new Booking(new Stay('athens-plaka', '2027-09-01', '2027-09-15', 6), self::house('athens-plaka'), $year),
         ];
     }
 

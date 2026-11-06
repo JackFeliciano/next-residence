@@ -17,13 +17,22 @@ return [
     ['the second sample booking is admitted', static function (): void {
         Assert::true(Sample::bookings()[1]->admits());
     }],
-    ['the third sample booking is refused for a closed month in January', static function (): void {
+    ['the third sample booking is refused for a closed month in February', static function (): void {
         Assert::false(Sample::bookings()[2]->admits());
-        Assert::same('the house is closed in month 01', Sample::bookings()[2]->reason());
+        Assert::same('the house is closed in month 02', Sample::bookings()[2]->reason());
     }],
-    ['the fourth sample booking is refused for beds', static function (): void {
-        Assert::false(Sample::bookings()[3]->admits());
-        Assert::same('the house has 6 beds', Sample::bookings()[3]->reason());
+    ['the fourth sample booking fits the beds it asks for', static function (): void {
+        Assert::true(Sample::bookings()[3]->admits());
+        Assert::same('', Sample::bookings()[3]->reason());
+    }],
+    ['a party larger than the house is refused for beds', static function (): void {
+        $booking = new Booking(
+            new Stay('tbilisi-mtkvari', '2027-05-04', '2027-05-14', 9),
+            Sample::house('tbilisi-mtkvari'),
+            new Window(2027),
+        );
+        Assert::false($booking->admits());
+        Assert::same('the house has 6 beds', $booking->reason());
     }],
     ['a booking outside the year says so', static function (): void {
         $booking = new Booking(

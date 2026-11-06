@@ -6,9 +6,9 @@ namespace NextResidence\Home;
 
 /**
  * The rule the network runs on. A member may spend 182 days per calendar year
- * across the whole network, and the window counts those days per country,
- * because a tax authority reads the days per country and not the total. It
- * refuses a stay that overruns the year or pushes one country past its limit.
+ * in each country, because a tax authority reads the days per country and not
+ * the total. Two countries fill the ordinary year of 364 days. It refuses a stay
+ * that overruns the year or pushes one country past its limit.
  */
 final class Window
 {
