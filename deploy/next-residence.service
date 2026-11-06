@@ -1,0 +1,23 @@
+[Unit]
+Description=Next Residence network
+After=network.target
+
+[Service]
+Type=simple
+User=opc
+Group=opc
+WorkingDirectory=/srv/next-residence
+Environment=NEXT_BASE=/next-residence/
+ExecStart=/usr/bin/php -S 127.0.0.1:8094 -t showroom showroom/index.php
+Restart=on-failure
+RestartSec=2
+
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/srv/next-residence
+MemoryDenyWriteExecute=false
+
+[Install]
+WantedBy=multi-user.target

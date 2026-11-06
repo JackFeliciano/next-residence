@@ -1,0 +1,60 @@
+<?php
+
+declare(strict_types=1);
+
+namespace NextResidence\App;
+
+use NextResidence\Home\Sample;
+
+/**
+ * The front controller. The network page is the whole show, so the routes stay
+ * three: the network, a house and the health line.
+ */
+final class Front
+{
+    public function __construct(private readonly string $base)
+    {
+    }
+
+    public function run(): void
+    {
+        $router = new Router($this->base);
+        $views = new Views($this->base);
+
+        $router->get('/', static fn (): array => [200, ['html' => $views->home()]]);
+
+        $router->get('/house/{handle}', static function (string $handle) use ($views): array {
+            try {
+                $house = Sample::house($handle);
+            } catch (\RuntimeException) {
+                return [404, ['html' => $views->notFound($handle)]];
+            }
+
+            $body = '<h1>' . htmlspecialchars($house->city, ENT_QUOTES, 'UTF-8') . '</h1>' . "\n"
+                . '<p class="lead">' . htmlspecialchars($house->handle, ENT_QUOTES, 'UTF-8')
+                . ', ' . $house->beds . ' beds, open in months '
+                . htmlspecialchars(implode(' ', $house->openMonths), ENT_QUOTES, 'UTF-8') . '.</p>';
+
+            return [200, ['html' => $views->page($house->city, $body)]];
+        });
+
+        $router->get('/health', static fn (): array => [
+            200, ['json' => ['ok' => true, 'houses' => count(Sample::houses())]],
+        ]);
+
+        [$status, $body] = $router->handle(
+            $_SERVER['REQUEST_METHOD'] ?? 'GET',
+            $_SERVER['REQUEST_URI'] ?? '/',
+        );
+
+        http_response_code($status);
+        if (isset($body['json'])) {
+            header('Content-Type: application/json');
+            echo json_encode($body['json'], JSON_UNESCAPED_SLASHES), "\n";
+
+            return;
+        }
+        header('Content-Type: text/html; charset=utf-8');
+        echo $body['html'] ?? $views->notFound((string) ($body['path'] ?? '/'));
+    }
+}
