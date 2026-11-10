@@ -1,6 +1,6 @@
 ## Roadmap
 
-The project holds a model of houses, stays, booking windows and booking decisions across fifteen countries. Every stay runs exactly 364 days, crosses a calendar year boundary and keeps the member under the 183-day rule that tax authorities apply. A member holds one stay per country at a time.
+The project holds a model of houses, stays, booking windows and booking decisions across fifteen countries. Every stay runs from 3 July to 30 June, the fixed dates the network uses, and keeps the member under the 183-day rule that tax authorities apply. A member holds one stay per country at a time.
 
 1. Give a member a calendar that reaches past the two years one booking window touches.
 2. Show a house with its photograph and its deposit terms on one page.
