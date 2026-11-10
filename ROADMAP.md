@@ -1,9 +1,9 @@
 ## Roadmap
 
-The project currently holds a model of houses, stays, booking windows and booking decisions across fifteen countries. Every stay runs exactly 364 days, crosses a calendar year boundary and keeps the member below the 183-day tax residence threshold. Each country holds one stay at a time. The hand-written test runner contains 41 checks.
+The project holds a model of houses, stays, booking windows and booking decisions across fifteen countries. Every stay runs exactly 364 days, crosses a calendar year boundary and keeps the member under the 183-day rule that tax authorities apply. A member holds one stay per country at a time.
 
-1. Expand the worked booking examples to cover the different conditions that admit or refuse a stay.
-2. Develop the booking explanations so members can understand the first condition that prevents a booking.
-3. Extend the house and stay views to present the information held by each model clearly.
-4. Add test coverage for calendar boundaries, stay length, country limits and booking refusal reasons.
-5. Keep the booking model, sample data and network views aligned as the project grows.
+1. Give a member a calendar that reaches past the two years one booking window touches.
+2. Show a house with its photograph and its deposit terms on one page.
+3. Let a member read their own past stays, in date order.
+4. Expand the worked examples so each refusal reason has a case beside it.
+5. Cover calendar boundaries, stay length, the one-stay-per-country rule and every refusal reason in the test suite.
