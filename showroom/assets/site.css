@@ -144,7 +144,7 @@ th { font-weight: 600; color: var(--soft); font-size: 12px; text-transform: uppe
   .grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 18px 14px; }
 }
 
-.card a.open { display: inline-block; margin-top: 2px; }
+
 
 .creditline { margin: 26px 0 0; color: var(--soft); font-size: 12px; }
 
