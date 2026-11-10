@@ -6,8 +6,8 @@ namespace NextResidence\Home;
 
 /**
  * One stay in one house. A stay names the house, the two dates and how many
- * people sleep there, and it refuses a range that runs backwards. A stay is a
- * full year of presence, so it always crosses a year boundary.
+ * people sleep there, and it refuses a range that runs backwards. The network
+ * fixes the dates, so a stay always runs from 3 July to 30 June.
  */
 final class Stay
 {
@@ -50,18 +50,22 @@ final class Stay
     }
 
     /**
-     * How many of the stay's nights fall inside one calendar year. A stay that
-     * crosses New Year splits, and each year carries only its own share.
+     * How many days of the stay fall inside one calendar year. Both end days
+     * count, because a tax authority counts the day a member arrives and the
+     * day a member leaves. A stay that crosses New Year splits, and each year
+     * carries only its own share.
      */
     public function nightsInYear(int $year): int
     {
-        $start = max($this->from, sprintf('%04d-01-01', $year));
-        $end = min($this->to, sprintf('%04d-01-01', $year + 1));
-        if ($end <= $start) {
+        $first = sprintf('%04d-01-01', $year);
+        $last = sprintf('%04d-12-31', $year);
+        $start = max($this->from, $first);
+        $end = min($this->to, $last);
+        if ($end < $start) {
             return 0;
         }
 
-        return (int) (new \DateTimeImmutable($start))->diff(new \DateTimeImmutable($end))->days;
+        return (int) (new \DateTimeImmutable($start))->diff(new \DateTimeImmutable($end))->days + 1;
     }
 
     /**

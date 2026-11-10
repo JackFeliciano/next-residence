@@ -127,7 +127,7 @@ final class Views
     /** The stay window each card carries, so a house reads as bookable. */
     private function stayLine(House $house): string
     {
-        return 'One stay, 364 days, crossing ' . $this->year . ' and ' . ($this->year + 1);
+        return 'One stay, 3 July to 30 June, in ' . $this->year . ' and ' . ($this->year + 1);
     }
 
     private function bookingRow(Booking $booking): string
@@ -145,9 +145,9 @@ final class Views
 
     private function crossingRow(Stay $stay, int $year): string
     {
-        return '<p class="crossing">' . $this->h($stay->from) . ' to ' . $this->h($stay->to)
-            . ' runs ' . $stay->nights() . ' nights, of which ' . $stay->nightsInYear($year)
-            . ' fall in ' . $year . ' and ' . $stay->nightsInYear($year + 1) . ' fall in ' . ($year + 1) . '.</p>';
+        return '<p class="crossing">This stay runs from ' . $this->h($stay->from) . ' to ' . $this->h($stay->to) . ', with '
+            . $stay->nightsInYear($year) . ' days in ' . $year . ' and '
+            . $stay->nightsInYear($year + 1) . ' days in ' . ($year + 1) . '.</p>';
     }
 
     public function house(House $house): string
@@ -158,7 +158,7 @@ final class Views
         $body .= '<div class="photo big" aria-hidden="true"><span>' . $this->h($house->country) . '</span></div>' . "\n";
         $body .= '<h1>' . $this->h($house->city) . '</h1>' . "\n";
         $body .= '<p class="where">' . $this->h($house->country) . ' <span class="dot">.</span> ' . $house->beds . ' beds</p>' . "\n";
-        $body .= '<p class="months">One stay, 364 days, crossing ' . $this->year . ' and ' . ($this->year + 1) . '.</p>' . "\n";
+        $body .= '<p class="months">One stay, from 3 July to 30 June, in ' . $this->year . ' and ' . ($this->year + 1) . '.</p>' . "\n";
         $body .= '<p>Members book this house through the network office. The calendar runs twelve months at a time, and a stay may cross into the next calendar year. Each calendar year holds 182 days in this country.</p>' . "\n";
 
         return $this->page($house->city . ', ' . $house->country, $body);

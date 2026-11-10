@@ -10,41 +10,42 @@ use NextResidence\Home\Window;
 use NextResidence\Tests\Assert;
 
 return [
-    ['the first sample booking fills a year in one country', static function (): void {
+    ['the first sample booking takes the fixed dates', static function (): void {
         Assert::true(Sample::bookings()[0]->admits());
         Assert::same('', Sample::bookings()[0]->reason());
-        Assert::same(364, Sample::bookings()[0]->stay->nights());
+        Assert::same('2027-07-03', Sample::bookings()[0]->stay->from);
+        Assert::same('2028-06-30', Sample::bookings()[0]->stay->to);
     }],
-    ['the second sample booking fills a year in one country', static function (): void {
+    ['the second sample booking takes the fixed dates', static function (): void {
         Assert::true(Sample::bookings()[1]->admits());
-        Assert::same(364, Sample::bookings()[1]->stay->nights());
+        Assert::same('', Sample::bookings()[1]->reason());
     }],
-    ['a booking shorter than 364 days is refused', static function (): void {
+    ['a booking that starts a day early is refused', static function (): void {
         Assert::false(Sample::bookings()[2]->admits());
-        Assert::same('a stay runs 364 days', Sample::bookings()[2]->reason());
+        Assert::same('a stay begins on 3 July 2027', Sample::bookings()[2]->reason());
     }],
     ['a party larger than the house is refused for beds', static function (): void {
         Assert::false(Sample::bookings()[3]->admits());
         Assert::same('the house has 4 beds', Sample::bookings()[3]->reason());
     }],
-    ['a stay that runs into a third year is refused', static function (): void {
+    ['a stay that runs past 30 June is refused', static function (): void {
         $window = new Window(2027);
         $booking = new Booking(
-            new Stay('sofia-vitosha', '2028-01-02', '2029-01-01', 3),
+            new Stay('sofia-vitosha', '2027-07-03', '2028-07-01', 3),
             Sample::house('sofia-vitosha'),
             $window,
         );
         Assert::false($booking->admits());
-        Assert::same('a stay ends inside 2028', $booking->reason());
+        Assert::same('a stay ends on 30 June 2028', $booking->reason());
     }],
-    ['a stay of exactly 364 nights is admitted', static function (): void {
+    ['a stay on the fixed dates is admitted', static function (): void {
         $booking = new Booking(
-            new Stay('valletta-bastion', '2027-07-03', '2028-07-01', 2),
+            new Stay('valletta-bastion', '2027-07-03', '2028-06-30', 2),
             Sample::house('valletta-bastion'),
             new Window(2027),
         );
         Assert::true($booking->admits());
-        Assert::same(364, $booking->stay->nights());
+        Assert::same(363, $booking->stay->nights());
         Assert::same(0, $booking->nightsLeft());
     }],
     ['a stay that begins before July is refused', static function (): void {
@@ -54,20 +55,11 @@ return [
             new Window(2027),
         );
         Assert::false($booking->admits());
-        Assert::same('a stay begins in the last 182 days of 2027', $booking->reason());
-    }],
-    ['a stay that runs into a third year is refused', static function (): void {
-        $booking = new Booking(
-            new Stay('sofia-vitosha', '2028-01-02', '2029-01-01', 3),
-            Sample::house('sofia-vitosha'),
-            new Window(2027),
-        );
-        Assert::false($booking->admits());
-        Assert::same('a stay ends inside 2028', $booking->reason());
+        Assert::same('a stay begins on 3 July 2027', $booking->reason());
     }],
     ['a country that already holds a stay refuses another', static function (): void {
         $booking = new Booking(
-            new Stay('tbilisi-mtkvari', '2027-09-12', '2028-09-10', 5),
+            new Stay('tbilisi-mtkvari', '2027-07-03', '2028-06-30', 4),
             Sample::house('tbilisi-mtkvari'),
             new Window(2027),
             1,
@@ -75,11 +67,10 @@ return [
         Assert::false($booking->admits());
         Assert::same('the member already holds a stay in this country', $booking->reason());
     }],
-    ['the stay the page shows in full runs 364 days across two years', static function (): void {
+    ['the stay the page shows in full carries 182 days in each year', static function (): void {
         $stay = Sample::smartStay();
-        Assert::same(364, $stay->nights());
-        Assert::same(42, $stay->nightsInYear(2027));
-        Assert::same(322, $stay->nightsInYear(2028));
+        Assert::same(182, $stay->nightsInYear(2027));
+        Assert::same(182, $stay->nightsInYear(2028));
         Assert::same(0, $stay->nightsInYear(2029));
     }],
     ['the smart stay is admitted by the year it starts in', static function (): void {

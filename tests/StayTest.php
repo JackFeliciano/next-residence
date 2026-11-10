@@ -39,10 +39,10 @@ return [
         Assert::true($stay->covers('2027-11-13'));
         Assert::false($stay->covers('2027-11-14'));
     }],
-    ['a stay that crosses New Year keeps its total', static function (): void {
+    ['a stay that crosses New Year counts each day once', static function (): void {
         $stay = new Stay('panama-casco', '2027-12-28', '2028-01-04', 3);
         Assert::same(7, $stay->nights());
         Assert::same(4, $stay->nightsInYear(2027));
-        Assert::same(3, $stay->nightsInYear(2028));
+        Assert::same(4, $stay->nightsInYear(2028));
     }],
 ];

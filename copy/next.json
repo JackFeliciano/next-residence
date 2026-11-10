@@ -6,8 +6,8 @@
   "Availability"
  ],
  "countryline": "Georgia, Panama, Malta, England, Italy, Spain, Austria, Czechia, Hungary, Romania, Slovenia, Croatia, Serbia, Greece, Bulgaria",
- "stays": "A member books one stay of exactly 364 days in one country. The stay begins within the last 182 days of one calendar year and ends within the first 182 days of the next. The booking must cover the full period because a shorter stay does not meet the network's rule.",
- "rule": "Tax authorities count the days a person spends in a country. By limiting the stay to 182 days in one calendar year and 182 days in the next, the member stays below the 183-day threshold in each year. This 364-day structure helps the member avoid tax residence in the country where the house stands.",
+ "stays": "A member books one stay of one year in one country, from 3 July to 30 June. The dates are fixed. The network then cleans and repairs the house during the four days that follow.",
+ "rule": "Tax authorities count the days a person spends in a country. A stay from 3 July to 30 June puts 182 days in one calendar year and 182 in the next, so the member stays below the 183-day threshold and keeps tax residence elsewhere.",
  "support": "The support desk helps coordinate the demands of international living. Members can access tax residency guidance, tax consulting, banking, financial services, insurance, health plans, home schooling, residence ships and management of their own property as an investment.",
  "empty": "No houses match your search. Try another country, city or availability period."
 }

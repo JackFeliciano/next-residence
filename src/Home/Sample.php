@@ -75,17 +75,17 @@ final class Sample
         $year = new Window(2027);
 
         return [
-            new Booking(new Stay('tbilisi-mtkvari', '2027-09-12', '2028-09-10', 5), self::house('tbilisi-mtkvari'), $year),
-            new Booking(new Stay('vienna-ring', '2027-10-04', '2028-10-02', 4), self::house('vienna-ring'), $year),
-            new Booking(new Stay('athens-plaka', '2027-09-12', '2028-09-09', 6), self::house('athens-plaka'), $year),
-            new Booking(new Stay('panama-casco', '2027-10-04', '2028-10-02', 9), self::house('panama-casco'), $year),
-            new Booking(new Stay('sofia-vitosha', '2027-10-01', '2028-09-28', 4), self::house('sofia-vitosha'), $year),
+            new Booking(new Stay('tbilisi-mtkvari', '2027-07-03', '2028-06-30', 4), self::house('tbilisi-mtkvari'), $year),
+            new Booking(new Stay('vienna-ring', '2027-07-03', '2028-06-30', 4), self::house('vienna-ring'), $year),
+            new Booking(new Stay('athens-plaka', '2027-07-02', '2028-06-30', 3), self::house('athens-plaka'), $year),
+            new Booking(new Stay('panama-casco', '2027-07-03', '2028-06-30', 9), self::house('panama-casco'), $year),
+            new Booking(new Stay('sofia-vitosha', '2027-07-03', '2028-06-30', 3), self::house('sofia-vitosha'), $year),
         ];
     }
 
-    /** The smart stay the page shows in full: 364 days, two years, one country. */
+    /** The smart stay the page shows in full: 3 July to 30 June, one country. */
     public static function smartStay(): Stay
     {
-        return new Stay('tbilisi-mtkvari', '2027-11-20', '2028-11-18', 4);
+        return new Stay('tbilisi-mtkvari', '2027-07-03', '2028-06-30', 4);
     }
 }

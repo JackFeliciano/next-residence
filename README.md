@@ -4,7 +4,7 @@ NEXT Residence is a network of homes for perpetual traveler families living the 
 
 ## The stay model
 
-Every stay runs from 3 July to 30 June of the following year, 364 days in one country. The dates are fixed. July 3 to December 31 gives 182 days in one calendar year, and January 1 to June 30 gives 181 days in the next, or 182 when the year begins with a leap day. The four days between June 30 and July 3 let the network clean and repair the house. The member therefore spends no more than 182 days in either year, which keeps them under the 183-day rule tax authorities apply. A member holds one stay per country at a time.
+Every stay runs from 3 July to 30 June of the following year, in one country. The dates are fixed. July 3 to December 31 gives 182 days in one calendar year, and January 1 to June 30 gives 182 days in the next. The four days between June 30 and July 3 let the network clean and repair the house. The member therefore spends 182 days in each of the two years and stays under the 183-day rule tax authorities apply. A member holds one stay per country at a time.
 
 The model uses five main types:
 
