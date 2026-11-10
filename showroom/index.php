@@ -24,4 +24,18 @@ if (preg_match('#^/assets/(site\.css|app\.js)$#', $path, $m) === 1) {
     return;
 }
 
+// The fifteen photographs. The licence files stay out of reach.
+if (preg_match('#^/assets/photos/([0-9]{2}-[a-z0-9-]+\.jpg)$#', $path, $m) === 1) {
+    $file = __DIR__ . '/assets/photos/' . $m[1];
+    if (is_file($file)) {
+        header('Content-Type: image/jpeg');
+        header('Cache-Control: public, max-age=86400');
+        header('Content-Length: ' . filesize($file));
+        readfile($file);
+
+        return;
+    }
+}
+
+
 (new Front($base))->run();

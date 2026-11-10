@@ -42,9 +42,9 @@ return [
         }
     }],
     ['the house hands its country and photograph to the page', static function () use ($all): void {
-        $house = new House('sofia-vitosha', 'Sofia', 'Bulgaria', 5, $all, 'house-15.jpg');
+        $house = new House('sofia-vitosha', 'Sofia', 'Bulgaria', 5, $all, 'assets/photos/15-sofia-vitosha.jpg');
         $array = $house->toArray();
         Assert::same('Bulgaria', $array['country']);
-        Assert::same('house-15.jpg', $array['photo']);
+        Assert::same('assets/photos/15-sofia-vitosha.jpg', $array['photo']);
     }],
 ];

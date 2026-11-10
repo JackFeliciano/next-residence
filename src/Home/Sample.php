@@ -23,21 +23,21 @@ final class Sample
     public static function houses(): array
     {
         return [
-            new House('tbilisi-mtkvari', 'Tbilisi', 'Georgia', 6, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 'house-1.jpg'),
-            new House('panama-casco', 'Panama City', 'Panama', 4, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 'house-2.jpg'),
-            new House('valletta-bastion', 'Valletta', 'Malta', 5, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 'house-3.jpg'),
-            new House('london-courtyard', 'London', 'England', 6, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 'house-4.jpg'),
-            new House('como-lake', 'Como', 'Italy', 8, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 'house-5.jpg'),
-            new House('barcelona-gothic', 'Barcelona', 'Spain', 4, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 'house-6.jpg'),
-            new House('vienna-ring', 'Vienna', 'Austria', 5, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 'house-7.jpg'),
-            new House('prague-old-town', 'Prague', 'Czechia', 6, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 'house-8.jpg'),
-            new House('budapest-buda', 'Budapest', 'Hungary', 4, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 'house-9.jpg'),
-            new House('bucharest-herastrau', 'Bucharest', 'Romania', 5, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 'house-10.jpg'),
-            new House('ljubljana-river', 'Ljubljana', 'Slovenia', 4, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 'house-11.jpg'),
-            new House('split-diocletian', 'Split', 'Croatia', 6, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 'house-12.jpg'),
-            new House('belgrade-danube', 'Belgrade', 'Serbia', 4, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 'house-13.jpg'),
-            new House('athens-plaka', 'Athens', 'Greece', 6, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 'house-14.jpg'),
-            new House('sofia-vitosha', 'Sofia', 'Bulgaria', 5, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 'house-15.jpg'),
+            new House('tbilisi-mtkvari', 'Tbilisi', 'Georgia', 6, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 'assets/photos/01-tbilisi-mtkvari.jpg'),
+            new House('panama-casco', 'Panama City', 'Panama', 4, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 'assets/photos/02-panama-casco.jpg'),
+            new House('valletta-bastion', 'Valletta', 'Malta', 5, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 'assets/photos/03-valletta-bastion.jpg'),
+            new House('london-courtyard', 'London', 'England', 6, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 'assets/photos/04-london-courtyard.jpg'),
+            new House('como-lake', 'Como', 'Italy', 8, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 'assets/photos/05-como-lake.jpg'),
+            new House('barcelona-gothic', 'Barcelona', 'Spain', 4, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 'assets/photos/06-barcelona-gothic.jpg'),
+            new House('vienna-ring', 'Vienna', 'Austria', 5, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 'assets/photos/07-vienna-ring.jpg'),
+            new House('prague-old-town', 'Prague', 'Czechia', 6, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 'assets/photos/08-prague-old-town.jpg'),
+            new House('budapest-buda', 'Budapest', 'Hungary', 4, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 'assets/photos/09-budapest-buda.jpg'),
+            new House('bucharest-herastrau', 'Bucharest', 'Romania', 5, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 'assets/photos/10-bucharest-herastrau.jpg'),
+            new House('ljubljana-river', 'Ljubljana', 'Slovenia', 4, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 'assets/photos/11-ljubljana-river.jpg'),
+            new House('split-diocletian', 'Split', 'Croatia', 6, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 'assets/photos/12-split-diocletian.jpg'),
+            new House('belgrade-danube', 'Belgrade', 'Serbia', 4, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 'assets/photos/13-belgrade-danube.jpg'),
+            new House('athens-plaka', 'Athens', 'Greece', 6, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 'assets/photos/14-athens-plaka.jpg'),
+            new House('sofia-vitosha', 'Sofia', 'Bulgaria', 5, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 'assets/photos/15-sofia-vitosha.jpg'),
         ];
     }
 

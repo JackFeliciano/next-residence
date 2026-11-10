@@ -85,6 +85,10 @@ final class Views
 
         $body .= '<p class="empty" id="empty" hidden>' . $this->h($this->c('empty')) . '</p>' . "\n";
 
+        $body .= '<p class="creditline"><a href="credits">Photographs</a>: Wikimedia Commons, each file under its own licence.</p>' . "\n";
+
+        $body .= '<p class="creditline"><a href="../credits">Photographs</a>: Wikimedia Commons, each file under its own licence.</p>' . "\n";
+
         $body .= '<section class="rules">' . "\n";
         $body .= '<h2>Annual stays, and the year they cross</h2>' . "\n";
         $body .= '<p>' . $this->h($this->c('stays')) . '</p>' . "\n";
@@ -116,7 +120,8 @@ final class Views
     {
 
         return '<article class="card" data-city="' . $this->h($house->city) . '" data-country="' . $this->h($house->country) . '" data-name="' . $this->h($house->handle) . '">' . "\n"
-            . '<div class="photo" aria-hidden="true"><span>' . $this->h($house->country) . '</span></div>' . "\n"
+            . '<figure class="photo"><img src="' . $this->h($house->photo) . '" alt="' . $this->h($house->city . ', ' . $house->country) . '" loading="lazy" width="1200" height="900">'
+            . '<figcaption>' . $this->h($house->country) . '</figcaption></figure>' . "\n"
             . '<h3>' . $this->h($house->city) . '</h3>' . "\n"
             . '<p class="where">' . $this->h($house->country) . ' <span class="dot">.</span> ' . $house->beds . ' beds</p>' . "\n"
             . '<p class="span">' . $this->h($this->stayLine($house)) . '</p>' . "\n"
@@ -155,13 +160,43 @@ final class Views
         $body = '<header class="top">' . "\n"
             . '<span class="brand"><a href="./">NEXT Residence</a></span>' . "\n"
             . '</header>' . "\n";
-        $body .= '<div class="photo big" aria-hidden="true"><span>' . $this->h($house->country) . '</span></div>' . "\n";
+        $body .= '<figure class="photo big"><img src="' . $this->h($house->photo) . '" alt="' . $this->h($house->city . ', ' . $house->country) . '" width="1200" height="900">'
+            . '<figcaption>' . $this->h($house->country) . '</figcaption></figure>' . "\n";
         $body .= '<h1>' . $this->h($house->city) . '</h1>' . "\n";
         $body .= '<p class="where">' . $this->h($house->country) . ' <span class="dot">.</span> ' . $house->beds . ' beds</p>' . "\n";
         $body .= '<p class="months">One stay, from 3 July to 30 June, in ' . $this->year . ' and ' . ($this->year + 1) . '.</p>' . "\n";
         $body .= '<p>Members book this house through the network office. The calendar runs twelve months at a time, and a stay may cross into the next calendar year. Each calendar year holds 182 days in this country.</p>' . "\n";
 
         return $this->page($house->city . ', ' . $house->country, $body);
+    }
+
+    /**
+     * The photograph credits. Wikimedia licences ask for the author and the
+     * licence wherever the picture appears, so the page carries both.
+     */
+    public function credits(): string
+    {
+        $file = dirname(__DIR__, 2) . '/showroom/assets/photos/credits.json';
+        $items = is_file($file) ? (array) json_decode((string) file_get_contents($file), true) : [];
+
+        $body = '<header class="top">' . "\n"
+            . '<span class="brand"><a href="../">NEXT Residence</a></span>' . "\n"
+            . '</header>' . "\n";
+
+        $body .= '<div class="credits">' . "\n";
+        $body .= '<h1>Photographs</h1>' . "\n";
+        $body .= '<p class="back">Every photograph on this site comes from Wikimedia Commons and stays under the licence the author chose. The house names each work, its author, the licence, and the page it came from.</p>' . "\n";
+        $body .= '<ul>' . "\n";
+        foreach ($items as $item) {
+            $title = str_replace('File:', '', (string) ($item['title'] ?? ''));
+            $body .= '<li>' . $this->h($title) . ', ' . $this->h((string) ($item['artist'] ?? ''))
+                . '. ' . $this->h((string) ($item['license'] ?? '')) . '. '
+                . '<a href="' . $this->h((string) ($item['url'] ?? '#')) . '">Wikimedia Commons</a></li>' . "\n";
+        }
+        $body .= '</ul>' . "\n";
+        $body .= '</div>' . "\n";
+
+        return $this->page('Photographs', $body);
     }
 
     public function notFound(string $path): string

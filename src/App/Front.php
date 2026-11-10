@@ -8,7 +8,7 @@ use NextResidence\Home\Sample;
 
 /**
  * The front controller. The network page is the whole show, so the routes stay
- * three: the network, a house and the health line.
+ * four: the network, a house, the photograph credits and the health line.
  */
 final class Front
 {
@@ -32,6 +32,8 @@ final class Front
 
             return [200, ['html' => $views->house($house)]];
         });
+
+        $router->get('/credits', static fn (): array => [200, ['html' => $views->credits()]]);
 
         $router->get('/health', static fn (): array => [
             200, ['json' => ['ok' => true, 'houses' => count(Sample::houses())]],

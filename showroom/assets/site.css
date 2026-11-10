@@ -76,21 +76,41 @@ nav.chips {
 .card { margin: 0; }
 
 .photo {
+  position: relative;
+  margin: 0;
   aspect-ratio: 4 / 3;
   border-radius: 12px;
   background: linear-gradient(135deg, #efeae3, #dcd4ca);
-  display: flex;
-  align-items: flex-end;
-  padding: 12px;
   overflow: hidden;
 }
 
-.photo span {
+.photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.photo figcaption {
+  position: absolute;
+  left: 12px;
+  bottom: 10px;
   font-size: 11px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #6d635a;
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.55);
 }
+
+.card a.open { display: inline-block; margin-top: 2px; }
+
+.creditline {
+  margin: 26px 0 0;
+  color: var(--soft);
+  font-size: 12px;
+}
+
+.creditline a { color: inherit; }
 
 .card h3 { margin: 10px 0 2px; font-size: 16px; font-weight: 600; }
 .where { margin: 0; color: var(--soft); font-size: 13px; }
@@ -124,7 +144,21 @@ th { font-weight: 600; color: var(--soft); font-size: 12px; text-transform: uppe
   .grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 18px 14px; }
 }
 
+.card a.open { display: inline-block; margin-top: 2px; }
+
+.creditline { margin: 26px 0 0; color: var(--soft); font-size: 12px; }
+
+.creditline a { color: inherit; }
+
 .photo.big { aspect-ratio: 16 / 7; margin-top: 22px; }
+.photo.big figcaption { font-size: 12px; left: 16px; bottom: 14px; }
+.credits h1 { margin: 18px 0 6px; }
+.credits li { margin: 0 0 10px; font-size: 13px; line-height: 1.5; }
+.credits .back { font-size: 13px; line-height: 1.5; }
+.photo.big figcaption { font-size: 12px; left: 16px; bottom: 14px; }
+.credits h1 { margin: 18px 0 6px; }
+.credits li { margin: 0 0 10px; font-size: 13px; line-height: 1.5; }
+.credits .back { font-size: 13px; }
 
 .brand a { color: inherit; text-decoration: none; }
 
