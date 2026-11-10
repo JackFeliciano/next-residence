@@ -1,12 +1,10 @@
 # NEXT Residence
 
-NEXT Residence is a selective home exchange network for international families. Members book stays in houses held by the network across fifteen countries. The project models houses, stays, booking windows and booking decisions, and provides a small web demo of the rules.
+NEXT Residence is a network of homes for perpetual traveler families living the Flag Theory way of life. A member takes one house in one country for a year at a time and lives abroad without becoming tax resident there. The network spans fifteen countries. The project models houses, stays, booking windows and booking decisions, and provides a small web demo of the rules.
 
 ## The stay model
 
-Every stay runs exactly 364 days in one country and crosses a calendar year boundary. It begins within the last 182 days of one calendar year and ends within the first 182 days of the next.
-
-This structure keeps a member below the 183-day threshold that a country uses to claim tax residence. Each country can hold one stay at a time for a member.
+Every stay runs exactly 364 days in one country and crosses a calendar year boundary. It begins in the final 182 days of one calendar year and ends in the first 182 days of the next. No calendar year holds more than 182 days of the stay, which keeps the member under the 183-day rule tax authorities apply. A member holds one stay per country at a time.
 
 The model uses five main types:
 
